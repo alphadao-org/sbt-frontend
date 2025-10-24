@@ -6,6 +6,7 @@ import { AddAdminForm } from "@/components/AddAdminForm";
 import { CertificateShelf } from "@/components/CertificateShelf";
 import { ContractState } from "@/components/ContractState";
 import { MintForm } from "@/components/MintForm";
+import { NFTScanner } from "@/components/NFTScanner";
 import { TokenViewer } from "@/components/TokenViewer";
 import { useContractState } from "@/hooks/useContractState";
 import { CONTRACT_ADDRESS } from "@/lib/constants";
@@ -65,7 +66,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-purple-900 text-white antialiased">
       {/* Welcome Modal */}
       {showWelcomeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-md">
           <div className="bg-gray-800 p-8 rounded-2xl max-w-md mx-4 text-center border border-gray-700 shadow-2xl">
             <div className="mb-6">
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -240,6 +241,18 @@ export default function Home() {
             </div>
           </section>
         )}
+
+        <section id="nft-scanner" className="mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold">
+                NFT Blockchain Scanner
+              </h2>
+              <p className="text-sm text-gray-400">Scan all minted certificates on the TON blockchain</p>
+            </div>
+          </div>
+          <NFTScanner />
+        </section>
 
         <section id="certificate-explorer" className="mb-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
