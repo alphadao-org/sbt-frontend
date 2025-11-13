@@ -20,14 +20,16 @@ export function TabBar({ isDarkMode, activeTab, handleTabChange }: TabBarProps) 
             onClick={() => handleTabChange('home')}
             className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
               activeTab === 'home'
-                ? `tab-active transform scale-110 ${
-                    isDarkMode
-                      ? "bg-[#1da1f2]/20 text-[#1da1f2]"
-                      : "bg-[#1da1f2]/20 text-[#1da1f2]"
-                  }`
-                : `text-[#536471] hover:text-[#1da1f2] ${
-                    isDarkMode ? "hover:text-[#1da1f2]" : ""
-                  }`
+              ? `tab-active transform scale-110 ${
+                  isDarkMode
+                    ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
+                    : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+                }`
+              : `${
+                  isDarkMode
+                    ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
+                    : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
+                } transition-all duration-300 rounded-xl`
             }`}
           >
             <HomeIcon className={`w-6 h-6 mb-1 transition-all duration-300 ${
@@ -46,14 +48,17 @@ export function TabBar({ isDarkMode, activeTab, handleTabChange }: TabBarProps) 
             onClick={() => handleTabChange('gallery')}
             className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
               activeTab === 'gallery'
-                ? `tab-active transform scale-110 ${
-                    isDarkMode
-                      ? "bg-[#1da1f2]/20 text-[#1da1f2]"
-                      : "bg-[#1da1f2]/20 text-[#1da1f2]"
-                  }`
-                : `text-[#536471] hover:text-[#1da1f2] ${
-                    isDarkMode ? "hover:text-[#1da1f2]" : ""
-                  }`
+  ? `tab-active transform scale-110 ${
+      isDarkMode
+        ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
+        : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+    }`
+  : `${
+      isDarkMode
+        ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
+        : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
+    } transition-all duration-300 rounded-xl`
+
             }`}
           >
             <Grid3X3 className={`w-6 h-6 mb-1 transition-all duration-300 ${
@@ -72,14 +77,17 @@ export function TabBar({ isDarkMode, activeTab, handleTabChange }: TabBarProps) 
             onClick={() => handleTabChange('admin')}
             className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
               activeTab === 'admin'
-                ? `tab-active transform scale-110 ${
-                    isDarkMode
-                      ? "bg-[#1da1f2]/20 text-[#1da1f2]"
-                      : "bg-[#1da1f2]/20 text-[#1da1f2]"
-                  }`
-                : `text-[#536471] hover:text-[#1da1f2] ${
-                    isDarkMode ? "hover:text-[#1da1f2]" : ""
-                  }`
+  ? `tab-active transform scale-110 ${
+      isDarkMode
+        ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
+        : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+    }`
+  : `${
+      isDarkMode
+        ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
+        : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
+    } transition-all duration-300 rounded-xl`
+
             }`}
           >
             <Settings className={`w-6 h-6 mb-1 transition-all duration-300 ${

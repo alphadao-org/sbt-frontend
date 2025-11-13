@@ -211,7 +211,7 @@ export function AdminTab({
               <div className={`p-0.5 transition-colors duration-300 ${
                 isDarkMode ? "bg-gray-900" : "bg-gray-50"
               }`}>
-                <TonConnectButton />
+                <TonConnectButton key="admin-connect" />
               </div>
             </div>
           )}
