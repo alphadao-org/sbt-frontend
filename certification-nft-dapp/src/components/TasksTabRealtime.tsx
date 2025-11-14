@@ -306,17 +306,17 @@ export function TasksTab({
   }
 
   function renderBadge(frequency: Frequency) {
-    const base = "inline-block text-xs px-2 py-0.5 rounded-full font-semibold";
+    const base = "inline-block text-xs px-3 py-1 rounded-full font-medium";
     if (frequency === "Daily")
       return (
-        <span className={`${base} bg-green-100 text-green-700`}>Daily</span>
+        <span className={`${base} ${isDarkMode ? "bg-green-900/50 text-green-300" : "bg-green-100 text-green-700"}`}>Daily</span>
       );
     if (frequency === "Weekly")
       return (
-        <span className={`${base} bg-blue-100 text-blue-700`}>Weekly</span>
+        <span className={`${base} ${isDarkMode ? "bg-blue-900/50 text-blue-300" : "bg-blue-100 text-blue-700"}`}>Weekly</span>
       );
     return (
-      <span className={`${base} bg-purple-100 text-purple-700`}>Special</span>
+      <span className={`${base} ${isDarkMode ? "bg-purple-900/50 text-purple-300" : "bg-purple-100 text-purple-700"}`}>Special</span>
     );
   }
 
@@ -325,64 +325,86 @@ export function TasksTab({
       className={`transition-all duration-300 ${isTransitioning && previousTab === "tasks" ? "opacity-50" : "opacity-100"}`}
     >
       {/* Stats Dashboard */}
-      <div className="rounded-2xl p-4 mb-4 border bg-gradient-to-br from-white/30 to-white/10">
-        <div className="flex items-center justify-between mb-3">
+      <div className={`mx-4 mt-4 mb-6 rounded-2xl p-6 shadow-sm ${
+        isDarkMode
+          ? "bg-gray-900/80 backdrop-blur-xl border border-gray-800/50"
+          : "bg-white/80 backdrop-blur-xl border border-gray-200/50"
+      }`}>
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h3
-              className={`text-lg font-bold ${isDarkMode ? "text-white" : "text-[#14171a]"}`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
             >
               Stats
             </h3>
             <p
-              className={`text-xs ${isDarkMode ? "text-[#8899a6]" : "text-[#536471]"}`}
+              className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
             >
               Overview of your progress
             </p>
           </div>
 
           <div className="text-right">
-            <p className="text-sm text-[#8899a6]">Level</p>
-            <p className="font-bold text-xl">{level}</p>
+            <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Level</p>
+            <p className={`font-bold text-2xl ${isDarkMode ? "text-white" : "text-gray-900"}`}>{level}</p>
           </div>
         </div>
 
-        <div className="flex justify-end mb-3">
+        <div className="flex justify-end mb-4">
           <button
             onClick={() => setShowRewards((s) => !s)}
-            className="text-sm px-3 py-1 rounded-md bg-indigo-600 text-white"
+            className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+              isDarkMode
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-blue-600 text-white shadow-sm"
+            }`}
           >
             {showRewards ? "Back to Tasks" : "Rewards"}
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-lg border bg-opacity-40">
-            <p className="text-xs text-[#8899a6]">Total Points</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className={`p-4 rounded-xl ${
+            isDarkMode
+              ? "bg-gray-800/50 border border-gray-700/50"
+              : "bg-gray-50/80 border border-gray-200/50"
+          }`}>
+            <p className={`text-xs font-medium mb-2 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Total Points</p>
             <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-yellow-400" />
-              <span className="font-bold text-lg">{totalPoints}</span>
+              <Zap className="w-5 h-5 text-yellow-500" />
+              <span className={`font-bold text-xl ${isDarkMode ? "text-white" : "text-gray-900"}`}>{totalPoints}</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-lg border bg-opacity-40">
-            <p className="text-xs text-[#8899a6]">Daily Streak</p>
+          <div className={`p-4 rounded-xl ${
+            isDarkMode
+              ? "bg-gray-800/50 border border-gray-700/50"
+              : "bg-gray-50/80 border border-gray-200/50"
+          }`}>
+            <p className={`text-xs font-medium mb-2 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Daily Streak</p>
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-pink-400" />
-              <span className="font-bold text-lg">{dailyStreak}d</span>
+              <Sparkles className="w-5 h-5 text-pink-500" />
+              <span className={`font-bold text-xl ${isDarkMode ? "text-white" : "text-gray-900"}`}>{dailyStreak}d</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-lg border bg-opacity-40">
-            <p className="text-xs text-[#8899a6]">Completion Rate</p>
-            <div className="flex items-center gap-2">
-              <div className="font-bold text-lg">{completionRate}%</div>
-            </div>
+          <div className={`p-4 rounded-xl ${
+            isDarkMode
+              ? "bg-gray-800/50 border border-gray-700/50"
+              : "bg-gray-50/80 border border-gray-200/50"
+          }`}>
+            <p className={`text-xs font-medium mb-2 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Completion Rate</p>
+            <div className={`font-bold text-xl ${isDarkMode ? "text-white" : "text-gray-900"}`}>{completionRate}%</div>
           </div>
 
-          <div className="p-3 rounded-lg border bg-opacity-40">
-            <p className="text-xs text-[#8899a6]">Tasks</p>
+          <div className={`p-4 rounded-xl ${
+            isDarkMode
+              ? "bg-gray-800/50 border border-gray-700/50"
+              : "bg-gray-50/80 border border-gray-200/50"
+          }`}>
+            <p className={`text-xs font-medium mb-2 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Tasks</p>
             <div className="flex gap-2 mt-1">
-              <span className="text-xs px-2 py-1 rounded-full bg-[#1da1f2] text-white border-transparent">
+              <span className="text-xs px-3 py-1 rounded-full bg-blue-600 text-white font-medium">
                 All Tasks
               </span>
             </div>
@@ -396,33 +418,33 @@ export function TasksTab({
           <RewardsTab userAddress={userAddress} />
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="px-4 space-y-4">
           {isLoading ? (
-            // Loading placeholders
+            // Loading placeholders - iOS style
             Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={`loading-${index}`}
-                className={`p-4 rounded-xl transition-all duration-200 border animate-pulse ${
+                className={`p-4 rounded-2xl shadow-sm animate-pulse ${
                   isDarkMode
-                    ? "bg-[#192734] border-[#2f3336]"
-                    : "bg-white border-[#e6edf2]"
+                    ? "bg-gray-900/80 backdrop-blur-xl border border-gray-800/50"
+                    : "bg-white/80 backdrop-blur-xl border border-gray-200/50"
                 }`}
               >
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-4">
                   <div className="pt-1 flex-shrink-0">
-                    <div className={`w-6 h-6 rounded-full ${isDarkMode ? "bg-[#536471]" : "bg-[#bcc7cf]"}`} />
+                    <div className={`w-6 h-6 rounded-full ${isDarkMode ? "bg-gray-600" : "bg-gray-300"}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <div className={`h-4 rounded ${isDarkMode ? "bg-[#536471]" : "bg-[#e6edf2]"} w-3/4`} />
-                      <div className={`h-5 rounded-full ${isDarkMode ? "bg-[#536471]" : "bg-[#e6edf2]"} w-16`} />
+                    <div className="flex items-center justify-between mb-2">
+                      <div className={`h-4 rounded ${isDarkMode ? "bg-gray-600" : "bg-gray-300"} w-3/4`} />
+                      <div className={`h-5 rounded-full ${isDarkMode ? "bg-gray-600" : "bg-gray-300"} w-16`} />
                     </div>
-                    <div className={`h-3 rounded mt-2 ${isDarkMode ? "bg-[#536471]" : "bg-[#e6edf2]"} w-1/2`} />
-                    <div className={`h-2 rounded-full mt-3 ${isDarkMode ? "bg-[#2f3336]" : "bg-[#e6edf2]"} w-full`} />
+                    <div className={`h-3 rounded mb-3 ${isDarkMode ? "bg-gray-600" : "bg-gray-300"} w-1/2`} />
+                    <div className={`h-2 rounded-full ${isDarkMode ? "bg-gray-700" : "bg-gray-200"} w-full`} />
                   </div>
                   <div className="flex-shrink-0 text-right pt-1 flex flex-col items-end gap-2">
-                    <div className={`h-4 rounded ${isDarkMode ? "bg-[#536471]" : "bg-[#e6edf2]"} w-12`} />
-                    <div className={`h-6 rounded-md mt-2 ${isDarkMode ? "bg-[#536471]" : "bg-[#e6edf2]"} w-16`} />
+                    <div className={`h-4 rounded ${isDarkMode ? "bg-gray-600" : "bg-gray-300"} w-12`} />
+                    <div className={`h-8 rounded-lg mt-2 ${isDarkMode ? "bg-gray-600" : "bg-gray-300"} w-16`} />
                   </div>
                 </div>
               </div>
@@ -431,29 +453,31 @@ export function TasksTab({
             filteredTasks.map((task) => (
               <div
                 key={task.id}
-                className={`p-4 rounded-xl transition-all duration-200 border ${
+                className={`p-4 rounded-2xl shadow-sm transition-all duration-200 ${
                   task.completed
-                    ? "border-[#1da1f2]/40 bg-[#1da1f2]/8"
+                    ? isDarkMode
+                      ? "bg-green-900/20 backdrop-blur-xl border border-green-800/50"
+                      : "bg-green-50/80 backdrop-blur-xl border border-green-200/50"
                     : isDarkMode
-                      ? "bg-[#192734] border-[#2f3336]"
-                      : "bg-white border-[#e6edf2]"
+                      ? "bg-gray-900/80 backdrop-blur-xl border border-gray-800/50"
+                      : "bg-white/80 backdrop-blur-xl border border-gray-200/50"
                 }`}
               >
-                <div className="flex items-start gap-3 animate-on-scroll">
+                <div className="flex items-start gap-4 animate-on-scroll">
                   <div className="pt-1 flex-shrink-0">
                     {task.completed ? (
-                      <CheckCircle2 className="w-6 h-6 text-[#1da1f2]" />
+                      <CheckCircle2 className="w-6 h-6 text-green-500" />
                     ) : (
                       <Circle
-                        className={`w-6 h-6 ${isDarkMode ? "text-[#536471]" : "text-[#bcc7cf]"}`}
+                        className={`w-6 h-6 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
                       />
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-2">
                       <h4
-                        className={`font-semibold text-sm ${task.completed ? "text-[#1da1f2] line-through" : isDarkMode ? "text-white" : "text-[#14171a]"}`}
+                        className={`font-semibold text-base ${task.completed ? "text-green-600 line-through" : isDarkMode ? "text-white" : "text-gray-900"}`}
                       >
                         {task.title}
                       </h4>
@@ -462,28 +486,28 @@ export function TasksTab({
                       </div>
                     </div>
                     <p
-                      className={`text-xs mt-1 ${isDarkMode ? "text-[#8899a6]" : "text-[#536471]"}`}
+                      className={`text-sm mb-3 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
                     >
                       {task.description}
                     </p>
 
-                    <div className="mt-3">
+                    <div className="mb-3">
                       <div
-                        className={`${isDarkMode ? "bg-[#2f3336]" : "bg-[#e6edf2]"} h-2 rounded-full overflow-hidden`}
+                        className={`h-2 rounded-full overflow-hidden ${isDarkMode ? "bg-gray-700" : "bg-gray-200"}`}
                       >
                         <div
-                          className="h-full bg-gradient-to-r from-[#1da1f2] to-[#6366f1] transition-all"
+                          className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 rounded-full"
                           style={{ width: `${task.progress}%` }}
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex-shrink-0 text-right pt-1 flex flex-col items-end gap-2">
+                  <div className="flex-shrink-0 text-right pt-1 flex flex-col items-end gap-3">
                     <div className="flex items-center gap-1 justify-end">
-                      <Zap className="w-4 h-4 text-yellow-400" />
+                      <Zap className="w-4 h-4 text-yellow-500" />
                       <span
-                        className={`font-bold text-sm ${task.completed ? "text-[#1da1f2]" : "text-yellow-400"}`}
+                        className={`font-bold text-sm ${task.completed ? "text-green-600" : "text-yellow-600"}`}
                       >
                         +{task.reward}
                       </span>
@@ -492,7 +516,9 @@ export function TasksTab({
                     {!task.completed && (
                       <button
                         onClick={() => startTask(task.id)}
-                        className={`mt-2 px-3 py-1 text-xs rounded-md font-semibold ${isDarkMode ? "bg-[#1da1f2] text-white" : "bg-[#1da1f2] text-white"}`}
+                        className={`px-4 py-2 text-sm rounded-lg font-semibold transition-all ${
+                          isDarkMode ? "bg-blue-600 text-white shadow-sm" : "bg-blue-600 text-white shadow-sm"
+                        }`}
                       >
                         Start
                       </button>
@@ -501,7 +527,9 @@ export function TasksTab({
                     {task.completed && !task.claimed && (
                       <button
                         onClick={() => claimTask(task.id)}
-                        className={`mt-2 px-3 py-1 text-xs rounded-md font-semibold ${isDarkMode ? "bg-yellow-400 text-black" : "bg-yellow-400 text-black"}`}
+                        className={`px-4 py-2 text-sm rounded-lg font-semibold transition-all ${
+                          isDarkMode ? "bg-yellow-500 text-black shadow-sm" : "bg-yellow-500 text-black shadow-sm"
+                        }`}
                       >
                         Claim
                       </button>
@@ -510,7 +538,9 @@ export function TasksTab({
                     {task.claimed && (
                       <button
                         disabled
-                        className="mt-2 px-3 py-1 text-xs rounded-md font-semibold bg-gray-200 text-gray-500"
+                        className={`px-4 py-2 text-sm rounded-lg font-semibold ${
+                          isDarkMode ? "bg-gray-600 text-gray-300" : "bg-gray-200 text-gray-500"
+                        }`}
                       >
                         Claimed
                       </button>
@@ -524,12 +554,14 @@ export function TasksTab({
       )}
 
       {/* Completed Message */}
-      {completedCount === tasks.length && (
-        <div
-          className={`mt-6 p-4 rounded-xl text-center border-2 ${isDarkMode ? "bg-[#1da1f2]/10 border-[#1da1f2]/50" : "bg-[#1da1f2]/5 border-[#1da1f2]/30"}`}
-        >
+      {completedCount === tasks.length && !isLoading && (
+        <div className={`mx-4 mt-6 p-6 rounded-2xl text-center shadow-sm ${
+          isDarkMode
+            ? "bg-blue-900/20 backdrop-blur-xl border border-blue-800/50"
+            : "bg-blue-50/80 backdrop-blur-xl border border-blue-200/50"
+        }`}>
           <p
-            className={`font-semibold ${isDarkMode ? "text-[#1da1f2]" : "text-[#1da1f2]"}`}
+            className={`font-semibold text-lg ${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
           >
             🎉 All tasks completed! Keep checking back for new challenges.
           </p>

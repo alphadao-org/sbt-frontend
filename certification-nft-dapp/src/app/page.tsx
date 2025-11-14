@@ -153,7 +153,7 @@ export default function Home() {
   return (
     <div
       className={`min-h-screen antialiased transition-colors duration-300 ${
-        isDarkMode ? "bg-[#15202b] text-white" : "bg-white text-[#14171a]"
+        isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
       } max-w-md mx-auto relative overflow-y-auto`}
     >
       <WelcomeModal
@@ -164,9 +164,9 @@ export default function Home() {
 
       <Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
-      <main className="flex-1 px-4 py-4 pb-24 overflow-y-auto">
+      <main className="flex-1 px-4 py-6 pb-28 overflow-y-auto">
         {/* Tab Content */}
-        <div className="telegram-tab-content min-h-[calc(100vh-140px)]">
+        <div className="telegram-tab-content min-h-[calc(100vh-160px)]">
           {activeTab === "home" && (
             <HomeTab
               isDarkMode={isDarkMode}

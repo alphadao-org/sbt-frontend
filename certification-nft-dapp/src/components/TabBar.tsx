@@ -19,170 +19,150 @@ export function TabBar({
 }: TabBarProps) {
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 z-50 border-t transition-colors duration-300 ${
+      className={`fixed bottom-0 left-0 right-0 z-50 border-t transition-colors duration-300 safe-area-inset-bottom ${
         isDarkMode
-          ? "bg-[#192734]/95 border-[#2f3336] backdrop-blur-xl"
-          : "bg-white/95 border-[#e1e8ed] backdrop-blur-xl"
+          ? "bg-gray-900/95 border-gray-700 backdrop-blur-xl"
+          : "bg-white/95 border-gray-200 backdrop-blur-xl"
       }`}
     >
-      <div className="max-w-md mx-auto px-4 py-2">
+      <div className="max-w-md mx-auto px-4 py-3">
         <div className="flex items-center justify-around">
           {/* Home Tab */}
           <button
             onClick={() => handleTabChange("home")}
-            className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-300 min-w-[64px] relative ${
               activeTab === "home"
-                ? `tab-active transform scale-110 ${
+                ? `transform scale-105 ${
                     isDarkMode
-                      ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
-                      : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+                      ? "bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-lg"
+                      : "bg-blue-100 text-blue-700 border border-blue-300 shadow-lg"
                   }`
                 : `${
                     isDarkMode
-                      ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
-                      : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
-                  } transition-all duration-300 rounded-xl`
+                      ? "text-gray-400 hover:text-gray-300 hover:bg-gray-800/50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70"
+                  } transition-all duration-300`
             }`}
           >
             <HomeIcon
               className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                activeTab === "home" ? "animate-pulse" : ""
+                activeTab === "home" ? "scale-110" : ""
               }`}
             />
-            <span className="text-xs font-medium">Home</span>
+            <span className={`text-xs font-medium ${activeTab === "home" ? "font-semibold" : ""}`}>Home</span>
             {activeTab === "home" && (
-              <div
-                className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 rounded-full transition-colors duration-300 ${
-                  isDarkMode ? "bg-[#1da1f2]" : "bg-[#1da1f2]"
-                }`}
-              />
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-blue-500 rounded-full" />
             )}
           </button>
 
           {/* Tasks Tab */}
           <button
             onClick={() => handleTabChange("tasks")}
-            className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-300 min-w-[64px] relative ${
               activeTab === "tasks"
-                ? `tab-active transform scale-110 ${
+                ? `transform scale-105 ${
                     isDarkMode
-                      ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
-                      : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+                      ? "bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-lg"
+                      : "bg-blue-100 text-blue-700 border border-blue-300 shadow-lg"
                   }`
                 : `${
                     isDarkMode
-                      ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
-                      : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
-                  } transition-all duration-300 rounded-xl`
+                      ? "text-gray-400 hover:text-gray-300 hover:bg-gray-800/50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70"
+                  } transition-all duration-300`
             }`}
           >
             <CheckSquare
               className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                activeTab === "tasks" ? "animate-pulse" : ""
+                activeTab === "tasks" ? "scale-110" : ""
               }`}
             />
-            <span className="text-xs font-medium">Tasks</span>
+            <span className={`text-xs font-medium ${activeTab === "tasks" ? "font-semibold" : ""}`}>Tasks</span>
             {activeTab === "tasks" && (
-              <div
-                className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 rounded-full transition-colors duration-300 ${
-                  isDarkMode ? "bg-[#1da1f2]" : "bg-[#1da1f2]"
-                }`}
-              />
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-blue-500 rounded-full" />
             )}
           </button>
 
           {/* Gallery Tab */}
           <button
             onClick={() => handleTabChange("gallery")}
-            className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-300 min-w-[64px] relative ${
               activeTab === "gallery"
-                ? `tab-active transform scale-110 ${
+                ? `transform scale-105 ${
                     isDarkMode
-                      ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
-                      : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+                      ? "bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-lg"
+                      : "bg-blue-100 text-blue-700 border border-blue-300 shadow-lg"
                   }`
                 : `${
                     isDarkMode
-                      ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
-                      : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
-                  } transition-all duration-300 rounded-xl`
+                      ? "text-gray-400 hover:text-gray-300 hover:bg-gray-800/50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70"
+                  } transition-all duration-300`
             }`}
           >
             <Grid3X3
               className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                activeTab === "gallery" ? "animate-pulse" : ""
+                activeTab === "gallery" ? "scale-110" : ""
               }`}
             />
-            <span className="text-xs font-medium">Gallery</span>
+            <span className={`text-xs font-medium ${activeTab === "gallery" ? "font-semibold" : ""}`}>Gallery</span>
             {activeTab === "gallery" && (
-              <div
-                className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 rounded-full transition-colors duration-300 ${
-                  isDarkMode ? "bg-[#1da1f2]" : "bg-[#1da1f2]"
-                }`}
-              />
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-blue-500 rounded-full" />
             )}
           </button>
 
           {/* Admin Tab */}
           <button
             onClick={() => handleTabChange("admin")}
-            className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-300 min-w-[64px] relative ${
               activeTab === "admin"
-                ? `tab-active transform scale-110 ${
+                ? `transform scale-105 ${
                     isDarkMode
-                      ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
-                      : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+                      ? "bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-lg"
+                      : "bg-blue-100 text-blue-700 border border-blue-300 shadow-lg"
                   }`
                 : `${
                     isDarkMode
-                      ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
-                      : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
-                  } transition-all duration-300 rounded-xl`
+                      ? "text-gray-400 hover:text-gray-300 hover:bg-gray-800/50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70"
+                  } transition-all duration-300`
             }`}
           >
             <Settings
               className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                activeTab === "admin" ? "animate-pulse" : ""
+                activeTab === "admin" ? "scale-110" : ""
               }`}
             />
-            <span className="text-xs font-medium">Admin</span>
+            <span className={`text-xs font-medium ${activeTab === "admin" ? "font-semibold" : ""}`}>Admin</span>
             {activeTab === "admin" && (
-              <div
-                className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 rounded-full transition-colors duration-300 ${
-                  isDarkMode ? "bg-[#1da1f2]" : "bg-[#1da1f2]"
-                }`}
-              />
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-blue-500 rounded-full" />
             )}
           </button>
           {/* Rewards Tab */}
           <button
             onClick={() => handleTabChange("rewards")}
-            className={`tab-hover flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 min-w-[60px] relative ${
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-300 min-w-[64px] relative ${
               activeTab === "rewards"
-                ? `tab-active transform scale-110 ${
+                ? `transform scale-105 ${
                     isDarkMode
-                      ? "bg-purple-800/30 text-purple-300 border border-purple-700 shadow-md shadow-purple-900/30"
-                      : "bg-purple-100 text-purple-950 border border-purple-200 shadow-md shadow-purple-200/60"
+                      ? "bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-lg"
+                      : "bg-blue-100 text-blue-700 border border-blue-300 shadow-lg"
                   }`
                 : `${
                     isDarkMode
-                      ? "text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
-                      : "text-purple-800 hover:text-purple-950 hover:bg-purple-100/70"
-                  } transition-all duration-300 rounded-xl`
+                      ? "text-gray-400 hover:text-gray-300 hover:bg-gray-800/50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70"
+                  } transition-all duration-300`
             }`}
           >
             <Award
               className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                activeTab === "rewards" ? "animate-pulse" : ""
+                activeTab === "rewards" ? "scale-110" : ""
               }`}
             />
-            <span className="text-xs font-medium">Rewards</span>
+            <span className={`text-xs font-medium ${activeTab === "rewards" ? "font-semibold" : ""}`}>Rewards</span>
             {activeTab === "rewards" && (
-              <div
-                className={`absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 rounded-full transition-colors duration-300 ${
-                  isDarkMode ? "bg-[#1da1f2]" : "bg-[#1da1f2]"
-                }`}
-              />
+              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-blue-500 rounded-full" />
             )}
           </button>
         </div>
