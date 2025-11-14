@@ -109,3 +109,143 @@ export function shouldResetCheckIn(lastCheckinDate?: string): boolean {
   const today = getTodayDateString();
   return lastCheckinDate !== today;
 }
+
+/**
+ * Fetch leaderboard ordered by points (descending)
+ */
+export async function getLeaderboard(limit: number = 10) {
+  try {
+    const { data, error } = await supabase
+      .from("user_stats")
+      .select("user_address, points, referral_count")
+      .order("points", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.warn("Supabase leaderboard error:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (err) {
+    console.warn("Failed to fetch leaderboard:", err);
+    return [];
+  }
+}
+
+/**
+ * Fetch top referrers ordered by referral_count
+ */
+export async function getTopReferrers(limit: number = 10) {
+  try {
+    const { data, error } = await supabase
+      .from("user_stats")
+      .select("user_address, points, referral_count")
+      .order("referral_count", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.warn("Supabase referrers error:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (err) {
+    console.warn("Failed to fetch top referrers:", err);
+    return [];
+  }
+}
+
+/**
+ * Award an achievement to a user (idempotent)
+ */
+export async function awardAchievement(userAddress: string, achievementId: string) {
+  try {
+    // get existing achievements
+    const { data } = await supabase
+      .from("user_stats")
+      .select("achievements")
+      .eq("user_address", userAddress)
+      .single();
+
+    if (data && Array.isArray(data.achievements) && data.achievements.includes(achievementId)) {
+      return true; // already has achievement
+    }
+
+    const newAchievements = data && Array.isArray(data.achievements) ? [...data.achievements, achievementId] : [achievementId];
+
+    const { error } = await supabase
+      .from("user_stats")
+      .upsert({ user_address: userAddress, achievements: newAchievements }, { onConflict: "user_address" });
+
+    if (error) {
+      console.warn("Failed to award achievement:", error);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.warn("awardAchievement error:", err);
+    return false;
+  }
+}
+
+/**
+ * Load user's achievements
+ */
+export async function getUserAchievements(userAddress: string): Promise<string[]> {
+  try {
+    const { data, error } = await supabase
+      .from("user_stats")
+      .select("achievements")
+      .eq("user_address", userAddress)
+      .single();
+
+    if (error || !data) return [];
+    return Array.isArray(data.achievements) ? data.achievements : [];
+  } catch (_e) {
+    return [];
+  }
+}
+
+/**
+ * Increment referral count for a referrer (create row if missing)
+ */
+export async function incrementReferralCount(referrerAddress: string): Promise<boolean> {
+  try {
+    const { data } = await supabase
+      .from("user_stats")
+      .select("referral_count")
+      .eq("user_address", referrerAddress)
+      .single();
+
+    if (data) {
+      const current = typeof data.referral_count === "number" ? data.referral_count : 0;
+      const { error } = await supabase
+        .from("user_stats")
+        .update({ referral_count: current + 1 })
+        .eq("user_address", referrerAddress);
+      if (error) {
+        console.warn("Failed to increment referral count:", error);
+        return false;
+      }
+      return true;
+    }
+
+    // Insert new row
+    const { error } = await supabase
+      .from("user_stats")
+      .insert({ user_address: referrerAddress, referral_count: 1, points: 0, daily_streak: 0, claimed_task_ids: [] });
+
+    if (error) {
+      console.warn("Failed to create referrer row:", error);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.warn("incrementReferralCount error:", err);
+    return false;
+  }
+}
+

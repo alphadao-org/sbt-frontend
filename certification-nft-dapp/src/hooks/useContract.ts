@@ -3,13 +3,19 @@ import { useTonConnectUI } from "@tonconnect/ui-react";
 import { contractService } from "@/lib/contract/contractService";
 import type { TransactionResult } from "@/types";
 
+export interface MintTransactionResult extends TransactionResult {
+  tokenId?: number;
+  studentAddress?: string;
+  transactionHash?: string;
+}
+
 export const useContract = () => {
   const [tonConnectUI] = useTonConnectUI();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const mint = useCallback(
-    async (studentAddress: string): Promise<TransactionResult> => {
+    async (studentAddress: string, onMintSent?: () => void): Promise<MintTransactionResult> => {
       setLoading(true);
       setError(null);
 
@@ -18,9 +24,14 @@ export const useContract = () => {
           contractService.buildMintTransaction(studentAddress);
         const result = await tonConnectUI.sendTransaction(transaction);
 
+        // Call callback immediately after transaction is sent
+        onMintSent?.();
+
         return {
           success: true,
           hash: result.boc,
+          transactionHash: result.boc,
+          studentAddress,
         };
       } catch (err: any) {
         const errorMsg = err?.message || "Transaction failed";

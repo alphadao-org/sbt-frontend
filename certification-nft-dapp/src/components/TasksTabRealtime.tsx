@@ -9,6 +9,7 @@ import {
 import { useAnimateOnScroll } from "@/hooks/useAnimateOnScroll";
 import { loadUserStats, saveUserStats, hasCheckedInToday, getTodayDateString, shouldResetCheckIn } from "@/lib/supabaseService";
 import { EXTERNAL_LINKS, generateReferralLink, generateShareText, shareOrCopyLink } from "@/lib/externalLinks";
+import RewardsTab from "@/components/RewardsTab";
 
 type Category = "All" | "Social" | "Engagement" | "Learning" | "Referral";
 type Frequency = "Daily" | "Weekly" | "Special";
@@ -161,6 +162,7 @@ export function TasksTab({
       : tasks.filter((t) => t.category === categoryFilter);
 
   const level = Math.max(1, Math.floor(totalPoints / 500) + 1);
+  const [showRewards, setShowRewards] = useState(false);
 
   async function persistUserStats(address: string) {
     const claimedTaskIds = tasks.filter((t) => t.claimed).map((t) => t.id);
@@ -231,7 +233,39 @@ export function TasksTab({
 
     setTasks((prev) => prev.map((x) => (x.id === id ? { ...x, claimed: true } : x)));
 
-    if (userAddress) await persistUserStats(userAddress);
+    if (userAddress) {
+      await persistUserStats(userAddress);
+      // award first-claim achievement via server API
+      try {
+        await fetch(`/api/award-achievement`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userAddress, achievementId: "first_claim" }),
+        });
+      } catch (_e) {}
+
+      // If this was the "View Certificates" task, award certificate viewer badge
+      if (t.id === "e2") {
+        try {
+          await fetch(`/api/award-achievement`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userAddress, achievementId: "cert_viewer" }),
+          });
+        } catch (_e) {}
+      }
+
+      // Award 7-day streak badge if streak threshold met
+      try {
+        if (dailyStreak >= 7) {
+          await fetch(`/api/award-achievement`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userAddress, achievementId: "streak_7" }),
+          });
+        }
+      } catch (_e) {}
+    }
   }
 
   function renderBadge(frequency: Frequency) {
@@ -242,73 +276,82 @@ export function TasksTab({
   }
 
   return (
-    <div
-      className={`transition-all duration-300 ${
-        isTransitioning && previousTab === "tasks" ? "opacity-50" : "opacity-100"
-      }`}
-    >
+    <div className={`transition-all duration-300 ${isTransitioning && previousTab === "tasks" ? "opacity-50" : "opacity-100"}`}>
       {/* Stats Dashboard */}
       <div className="rounded-2xl p-4 mb-4 border bg-gradient-to-br from-white/30 to-white/10">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h3 className={`text-lg font-bold ${isDarkMode ? "text-white" : "text-[#14171a]"}`}>
-              Stats
-            </h3>
+            <h3 className={`text-lg font-bold ${isDarkMode ? "text-white" : "text-[#14171a]"}`}>Stats</h3>
             <p className={`text-xs ${isDarkMode ? "text-[#8899a6]" : "text-[#536471]"}`}>Overview of your progress</p>
           </div>
+
           <div className="text-right">
             <p className="text-sm text-[#8899a6]">Level</p>
             <p className="font-bold text-xl">{level}</p>
           </div>
         </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg border bg-opacity-40">
-              <p className="text-xs text-[#8899a6]">Total Points</p>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-yellow-400" />
-                <span className="font-bold text-lg">{totalPoints}</span>
-              </div>
-            </div>
+        <div className="flex justify-end mb-3">
+          <button onClick={() => setShowRewards((s) => !s)} className="text-sm px-3 py-1 rounded-md bg-indigo-600 text-white">
+            {showRewards ? "Back to Tasks" : "Rewards"}
+          </button>
+        </div>
 
-            <div className="p-3 rounded-lg border bg-opacity-40">
-              <p className="text-xs text-[#8899a6]">Daily Streak</p>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-pink-400" />
-                <span className="font-bold text-lg">{dailyStreak}d</span>
-              </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3 rounded-lg border bg-opacity-40">
+            <p className="text-xs text-[#8899a6]">Total Points</p>
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-yellow-400" />
+              <span className="font-bold text-lg">{totalPoints}</span>
             </div>
+          </div>
 
-            <div className="p-3 rounded-lg border bg-opacity-40">
-              <p className="text-xs text-[#8899a6]">Completion Rate</p>
-              <div className="flex items-center gap-2">
-                <div className="font-bold text-lg">{completionRate}%</div>
-              </div>
+          <div className="p-3 rounded-lg border bg-opacity-40">
+            <p className="text-xs text-[#8899a6]">Daily Streak</p>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-pink-400" />
+              <span className="font-bold text-lg">{dailyStreak}d</span>
             </div>
+          </div>
 
-            <div className="p-3 rounded-lg border bg-opacity-40">
-              <p className="text-xs text-[#8899a6]">Categories</p>
-              <div className="flex gap-2 mt-1">
-                {(["All", "Social", "Engagement", "Learning", "Referral"] as Category[]).map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCategoryFilter(c)}
-                    className={`text-xs px-2 py-1 rounded-full border ${
-                      categoryFilter === c ? "bg-[#1da1f2] text-white border-transparent" : "bg-transparent text-[#536471]"
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+          <div className="p-3 rounded-lg border bg-opacity-40">
+            <p className="text-xs text-[#8899a6]">Completion Rate</p>
+            <div className="flex items-center gap-2">
+              <div className="font-bold text-lg">{completionRate}%</div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-lg border bg-opacity-40">
+            <p className="text-xs text-[#8899a6]">Categories</p>
+            <div className="flex gap-2 mt-1">
+              {(["All", "Social", "Engagement", "Learning", "Referral"] as Category[]).map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCategoryFilter(c)}
+                  className={`text-xs px-2 py-1 rounded-full border ${categoryFilter === c ? "bg-[#1da1f2] text-white border-transparent" : "bg-transparent text-[#536471]"}`}
+                >
+                  {c}
+                </button>
+              ))}
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Tasks list */}
+      {/* Tasks list or Rewards tab */}
+      {showRewards ? (
+        <div className="mt-2">
+          <RewardsTab userAddress={userAddress} />
+        </div>
+      ) : (
         <div className="space-y-3">
           {filteredTasks.map((task) => (
-            <div key={task.id} className={`p-4 rounded-xl transition-all duration-200 border ${task.completed ? "border-[#1da1f2]/40 bg-[#1da1f2]/8" : isDarkMode ? "bg-[#192734] border-[#2f3336]" : "bg-white border-[#e6edf2]"}`}>
+            <div
+              key={task.id}
+              className={`p-4 rounded-xl transition-all duration-200 border ${
+                task.completed ? "border-[#1da1f2]/40 bg-[#1da1f2]/8" : isDarkMode ? "bg-[#192734] border-[#2f3336]" : "bg-white border-[#e6edf2]"
+              }`}
+            >
               <div className="flex items-start gap-3 animate-on-scroll">
                 <div className="pt-1 flex-shrink-0">
                   {task.completed ? (
@@ -318,16 +361,13 @@ export function TasksTab({
                   )}
                 </div>
 
-              <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <h4 className={`font-semibold text-sm ${task.completed ? "text-[#1da1f2] line-through" : isDarkMode ? "text-white" : "text-[#14171a]"}`}>{task.title}</h4>
-                    <div className="flex items-center gap-2">
-                      {renderBadge(task.frequency)}
-                    </div>
+                    <div className="flex items-center gap-2">{renderBadge(task.frequency)}</div>
                   </div>
                   <p className={`text-xs mt-1 ${isDarkMode ? "text-[#8899a6]" : "text-[#536471]"}`}>{task.description}</p>
 
-                  {/* Progress bar (if needed) */}
                   <div className="mt-3">
                     <div className={`${isDarkMode ? "bg-[#2f3336]" : "bg-[#e6edf2]"} h-2 rounded-full overflow-hidden`}>
                       <div className="h-full bg-gradient-to-r from-[#1da1f2] to-[#6366f1] transition-all" style={{ width: `${task.progress}%` }} />
@@ -341,40 +381,32 @@ export function TasksTab({
                     <span className={`font-bold text-sm ${task.completed ? "text-[#1da1f2]" : "text-yellow-400"}`}>+{task.reward}</span>
                   </div>
 
-                  {/* Action button */}
                   {!task.completed && (
-                    <button
-                      onClick={() => startTask(task.id)}
-                      className={`mt-2 px-3 py-1 text-xs rounded-md font-semibold ${isDarkMode ? "bg-[#1da1f2] text-white" : "bg-[#1da1f2] text-white"}`}
-                    >
+                    <button onClick={() => startTask(task.id)} className={`mt-2 px-3 py-1 text-xs rounded-md font-semibold ${isDarkMode ? "bg-[#1da1f2] text-white" : "bg-[#1da1f2] text-white"}`}>
                       Start
                     </button>
                   )}
 
                   {task.completed && !task.claimed && (
-                    <button
-                      onClick={() => claimTask(task.id)}
-                      className={`mt-2 px-3 py-1 text-xs rounded-md font-semibold ${isDarkMode ? "bg-yellow-400 text-black" : "bg-yellow-400 text-black"}`}
-                    >
+                    <button onClick={() => claimTask(task.id)} className={`mt-2 px-3 py-1 text-xs rounded-md font-semibold ${isDarkMode ? "bg-yellow-400 text-black" : "bg-yellow-400 text-black"}`}>
                       Claim
                     </button>
                   )}
 
-                  {task.claimed && (
-                    <button disabled className="mt-2 px-3 py-1 text-xs rounded-md font-semibold bg-gray-200 text-gray-500">Claimed</button>
-                  )}
+                  {task.claimed && <button disabled className="mt-2 px-3 py-1 text-xs rounded-md font-semibold bg-gray-200 text-gray-500">Claimed</button>}
                 </div>
               </div>
             </div>
           ))}
         </div>
+      )}
 
-        {/* Completed Message */}
-        {completedCount === tasks.length && (
-          <div className={`mt-6 p-4 rounded-xl text-center border-2 ${isDarkMode ? "bg-[#1da1f2]/10 border-[#1da1f2]/50" : "bg-[#1da1f2]/5 border-[#1da1f2]/30"}`}>
-            <p className={`font-semibold ${isDarkMode ? "text-[#1da1f2]" : "text-[#1da1f2]"}`}>🎉 All tasks completed! Keep checking back for new challenges.</p>
-          </div>
-        )}
-      </div>
-    );
-  }
+      {/* Completed Message */}
+      {completedCount === tasks.length && (
+        <div className={`mt-6 p-4 rounded-xl text-center border-2 ${isDarkMode ? "bg-[#1da1f2]/10 border-[#1da1f2]/50" : "bg-[#1da1f2]/5 border-[#1da1f2]/30"}`}>
+          <p className={`font-semibold ${isDarkMode ? "text-[#1da1f2]" : "text-[#1da1f2]"}`}>🎉 All tasks completed! Keep checking back for new challenges.</p>
+        </div>
+      )}
+    </div>
+  );
+}

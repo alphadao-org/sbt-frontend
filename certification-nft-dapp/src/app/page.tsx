@@ -9,6 +9,7 @@ import { GalleryTab } from "@/components/GalleryTab";
 import { TasksTab } from "@/components/TasksTabRealtime";
 import { AdminTab } from "@/components/AdminTab";
 import { TabBar } from "@/components/TabBar";
+import RewardsTab from "@/components/RewardsTab";
 
 export default function Home() {
   const userAddress = useTonAddress();
@@ -159,7 +160,7 @@ export default function Home() {
         setShowWelcomeModal={setShowWelcomeModal}
       />
 
-      <Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      <Header isDarkMode={isDarkMode} toggleTheme={toggleTheme} handleTabChange={handleTabChange} />
 
       <main className="flex-1 px-4 py-4 pb-24 overflow-y-auto">
         {/* Tab Content */}
@@ -190,6 +191,10 @@ export default function Home() {
               isTransitioning={isTransitioning}
               previousTab={previousTab}
             />
+          )}
+
+          {activeTab === 'rewards' && (
+            <RewardsTab userAddress={userAddress} />
           )}
 
           {activeTab === 'admin' && (
