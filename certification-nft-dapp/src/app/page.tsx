@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { HomeTab } from "@/components/HomeTab";
 import { GalleryTab } from "@/components/GalleryTab";
-import { TasksTab } from "@/components/TasksTab";
+import { TasksTab } from "@/components/TasksTabRealtime";
 import { AdminTab } from "@/components/AdminTab";
 import { TabBar } from "@/components/TabBar";
 
@@ -180,6 +180,7 @@ export default function Home() {
               isDarkMode={isDarkMode}
               isTransitioning={isTransitioning}
               previousTab={previousTab}
+              userAddress={userAddress}
             />
           )}
 
